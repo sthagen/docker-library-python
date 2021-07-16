@@ -34,8 +34,8 @@ fi
 versions=( "${versions[@]%/}" )
 
 pipVersion="$(curl -fsSL 'https://pypi.org/pypi/pip/json' | jq -r .info.version)"
-getPipCommit="$(curl -fsSL 'https://github.com/pypa/get-pip/commits/master/get-pip.py.atom' | tac|tac | awk -F '[[:space:]]*[<>/]+' '$2 == "id" && $3 ~ /Commit/ { print $4; exit }')"
-getPipUrl="https://github.com/pypa/get-pip/raw/$getPipCommit/get-pip.py"
+getPipCommit="$(curl -fsSL 'https://github.com/pypa/get-pip/commits/main/public/get-pip.py.atom' | tac|tac | awk -F '[[:space:]]*[<>/]+' '$2 == "id" && $3 ~ /Commit/ { print $4; exit }')"
+getPipUrl="https://github.com/pypa/get-pip/raw/$getPipCommit/public/get-pip.py"
 getPipSha256="$(curl -fsSL "$getPipUrl" | sha256sum | cut -d' ' -f1)"
 
 generated_warning() {
@@ -132,7 +132,7 @@ for version in "${versions[@]}"; do
 	echo "$version: $fullVersion"
 
 	for v in \
-		alpine{3.12,3.13} \
+		alpine{3.14,3.13} \
 		{stretch,buster}{/slim,} \
 		windows/windowsservercore-{1809,ltsc2016} \
 	; do

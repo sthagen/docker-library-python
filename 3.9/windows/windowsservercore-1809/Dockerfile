@@ -11,8 +11,8 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 # https://github.com/docker-library/python/pull/557
 ENV PYTHONIOENCODING UTF-8
 
-ENV PYTHON_VERSION 3.9.2
-ENV PYTHON_RELEASE 3.9.2
+ENV PYTHON_VERSION 3.9.6
+ENV PYTHON_RELEASE 3.9.6
 
 RUN $url = ('https://www.python.org/ftp/python/{0}/python-{1}-amd64.exe' -f $env:PYTHON_RELEASE, $env:PYTHON_VERSION); \
 	Write-Host ('Downloading {0} ...' -f $url); \
@@ -20,8 +20,8 @@ RUN $url = ('https://www.python.org/ftp/python/{0}/python-{1}-amd64.exe' -f $env
 	Invoke-WebRequest -Uri $url -OutFile 'python.exe'; \
 	\
 	Write-Host 'Installing ...'; \
-# https://docs.python.org/3.5/using/windows.html#installing-without-ui
-	Start-Process python.exe -Wait \
+# https://docs.python.org/3/using/windows.html#installing-without-ui
+	$exitCode = (Start-Process python.exe -Wait -NoNewWindow -PassThru \
 		-ArgumentList @( \
 			'/quiet', \
 			'InstallAllUsers=1', \
@@ -31,7 +31,13 @@ RUN $url = ('https://www.python.org/ftp/python/{0}/python-{1}-amd64.exe' -f $env
 			'Include_doc=0', \
 			'Include_pip=0', \
 			'Include_test=0' \
-		); \
+		) \
+	).ExitCode; \
+	if ($exitCode -ne 0) { \
+		Write-Host ('Running python installer failed with exit code: {0}' -f $exitCode); \
+		Get-ChildItem $env:TEMP | Sort-Object -Descending -Property LastWriteTime | Select-Object -First 1 | Get-Content; \
+		exit $exitCode; \
+	} \
 	\
 # the installer updated PATH, so we should refresh our local value
 	$env:PATH = [Environment]::GetEnvironmentVariable('PATH', [EnvironmentVariableTarget]::Machine); \
@@ -41,14 +47,15 @@ RUN $url = ('https://www.python.org/ftp/python/{0}/python-{1}-amd64.exe' -f $env
 	\
 	Write-Host 'Removing ...'; \
 	Remove-Item python.exe -Force; \
+	Remove-Item $env:TEMP/Python*.log -Force; \
 	\
 	Write-Host 'Complete.'
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 21.0.1
+ENV PYTHON_PIP_VERSION 21.1.3
 # https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/b60e2320d9e8d02348525bd74e871e466afdf77c/get-pip.py
-ENV PYTHON_GET_PIP_SHA256 c3b81e5d06371e135fb3156dc7d8fd6270735088428c4a9a5ec1f342e2024565
+ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/a1675ab6c2bd898ed82b1f58c486097f763c74a9/public/get-pip.py
+ENV PYTHON_GET_PIP_SHA256 6665659241292b2147b58922b9ffe11dda66b39d52d8a6f3aa310bc1d60ea6f7
 
 RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); \
 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
