@@ -4,7 +4,7 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM buildpack-deps:buster
+FROM buildpack-deps:bullseye
 
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
