@@ -4,7 +4,7 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM alpine:3.15
+FROM alpine:3.17
 
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
@@ -21,7 +21,7 @@ RUN set -eux; \
 	;
 
 ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
-ENV PYTHON_VERSION 3.7.15
+ENV PYTHON_VERSION 3.7.16
 
 RUN set -eux; \
 	\
