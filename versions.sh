@@ -17,7 +17,8 @@ else
 fi
 versions=( "${versions[@]%/}" )
 
-getPipCommit="$(curl -fsSL 'https://github.com/pypa/get-pip/commits/main/public/get-pip.py.atom' | tac|tac | awk -F '[[:space:]]*[<>/]+' '$2 == "id" && $3 ~ /Commit/ { print $4; exit }')"
+getPipCommit="$(curl -fsSL 'https://github.com/pypa/get-pip/commits/main/public/get-pip.py.atom' | grep -E 'id.*Commit')"
+getPipCommit="$(awk <<<"$getPipCommit" -F '[[:space:]]*[<>/]+' '$2 == "id" && $3 ~ /Commit/ { print $4; exit }')"
 getPipUrl="https://github.com/pypa/get-pip/raw/$getPipCommit/public/get-pip.py"
 getPipSha256="$(curl -fsSL "$getPipUrl" | sha256sum | cut -d' ' -f1)"
 export getPipUrl getPipSha256
@@ -143,6 +144,11 @@ for version in "${versions[@]}"; do
 			echo "$minimumSetuptoolsVersion"
 		} | sort -rV | head -1
 	)"
+
+	# https://github.com/docker-library/python/issues/781 (TODO remove this once 3.10, 3.11, and 3.12 embed a newer setuptools and this section no longer applies)
+	if [ "$setuptoolsVersion" = '65.5.0' ]; then
+		setuptoolsVersion='65.5.1'
+	fi
 
 	# TODO wheelVersion, somehow: https://github.com/docker-library/python/issues/365#issuecomment-914669320
 
