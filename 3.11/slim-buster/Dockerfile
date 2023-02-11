@@ -24,7 +24,7 @@ RUN set -eux; \
 	rm -rf /var/lib/apt/lists/*
 
 ENV GPG_KEY A035C8C19219BA821ECEA86B64E628F8D684696D
-ENV PYTHON_VERSION 3.11.1
+ENV PYTHON_VERSION 3.11.2
 
 RUN set -eux; \
 	\
@@ -46,7 +46,6 @@ RUN set -eux; \
 		libsqlite3-dev \
 		libssl-dev \
 		make \
-		patchelf \
 		tk-dev \
 		uuid-dev \
 		wget \
@@ -78,15 +77,22 @@ RUN set -eux; \
 		--without-ensurepip \
 	; \
 	nproc="$(nproc)"; \
+	LDFLAGS="-Wl,--strip-all"; \
 	make -j "$nproc" \
-		LDFLAGS="-Wl,--strip-all" \
+		"EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" \
+		"LDFLAGS=${LDFLAGS:-}" \
+		"PROFILE_TASK=${PROFILE_TASK:-}" \
 	; \
-	make install; \
-	\
 # https://github.com/docker-library/python/issues/784
 # prevent accidental usage of a system installed libpython of the same version
-	bin="$(readlink -vf /usr/local/bin/python3)"; \
-	patchelf --set-rpath '$ORIGIN/../lib' "$bin"; \
+	rm python; \
+	make -j "$nproc" \
+		"EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" \
+		"LDFLAGS=${LDFLAGS:--Wl},-rpath='\$\$ORIGIN/../lib'" \
+		"PROFILE_TASK=${PROFILE_TASK:-}" \
+		python \
+	; \
+	make install; \
 	\
 	cd /; \
 	rm -rf /usr/src/python; \
@@ -129,8 +135,8 @@ ENV PYTHON_PIP_VERSION 22.3.1
 # https://github.com/docker-library/python/issues/365
 ENV PYTHON_SETUPTOOLS_VERSION 65.5.1
 # https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/66030fa03382b4914d4c4d0896961a0bdeeeb274/public/get-pip.py
-ENV PYTHON_GET_PIP_SHA256 1e501cf004eac1b7eb1f97266d28f995ae835d30250bec7f8850562703067dc6
+ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/1a96dc5acd0303c4700e02655aefd3bc68c78958/public/get-pip.py
+ENV PYTHON_GET_PIP_SHA256 d1d09b0f9e745610657a528689ba3ea44a73bd19c60f4c954271b790c71c2653
 
 RUN set -eux; \
 	\
