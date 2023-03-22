@@ -37,6 +37,7 @@ RUN set -eux; \
 		libbluetooth-dev \
 		libbz2-dev \
 		libc6-dev \
+		libdb-dev \
 		libexpat1-dev \
 		libffi-dev \
 		libgdbm-dev \
@@ -76,7 +77,9 @@ RUN set -eux; \
 		--without-ensurepip \
 	; \
 	nproc="$(nproc)"; \
-	LDFLAGS="-Wl,--strip-all"; \
+	EXTRA_CFLAGS="$(dpkg-buildflags --get CFLAGS)"; \
+	LDFLAGS="$(dpkg-buildflags --get LDFLAGS)"; \
+	LDFLAGS="${LDFLAGS:--Wl},--strip-all"; \
 	make -j "$nproc" \
 		"EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" \
 		"LDFLAGS=${LDFLAGS:-}" \
