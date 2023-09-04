@@ -19,7 +19,7 @@
       "alpine3.18",
       "alpine3.17"
     ],
-    "version": "3.10.12"
+    "version": "3.10.13"
   },
   "3.11": {
     "get-pip": {
@@ -28,7 +28,7 @@
       "version": "https://github.com/pypa/get-pip/commit/9af82b715db434abb94a0a6f3569f43e72157346"
     },
     "pip": {
-      "version": "23.1.2"
+      "version": "23.2.1"
     },
     "setuptools": {
       "version": "65.5.1"
@@ -43,7 +43,7 @@
       "windows/windowsservercore-ltsc2022",
       "windows/windowsservercore-1809"
     ],
-    "version": "3.11.4"
+    "version": "3.11.5"
   },
   "3.12-rc": {
     "get-pip": {
@@ -108,7 +108,7 @@
       "alpine3.18",
       "alpine3.17"
     ],
-    "version": "3.8.17"
+    "version": "3.8.18"
   },
   "3.9": {
     "get-pip": {
@@ -130,6 +130,6 @@
       "alpine3.18",
       "alpine3.17"
     ],
-    "version": "3.9.17"
+    "version": "3.9.18"
   }
 }
