@@ -9,8 +9,9 @@ FROM buildpack-deps:bullseye
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
 
-# http://bugs.python.org/issue19846
-# > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
+# cannot remove LANG even though https://bugs.python.org/issue19846 is fixed
+# last attempted removal of LANG broke many users:
+# https://github.com/docker-library/python/pull/570
 ENV LANG C.UTF-8
 
 # runtime dependencies
@@ -23,7 +24,7 @@ RUN set -eux; \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
-ENV GPG_KEY E3FF2839C048B25C084DEBE9B26995E310250568
+ENV GPG_KEY A035C8C19219BA821ECEA86B64E628F8D684696D
 ENV PYTHON_VERSION 3.10.14
 
 RUN set -eux; \
