@@ -25,8 +25,8 @@ RUN set -eux; \
 	rm -rf /var/lib/apt/lists/*
 
 ENV GPG_KEY 7169605F62C751356D054A26A821E680E5FA6305
-ENV PYTHON_VERSION 3.12.8
-ENV PYTHON_SHA256 c909157bb25ec114e5869124cc2a9c4a4d4c1e957ca4ff553f1edc692101154e
+ENV PYTHON_VERSION 3.12.9
+ENV PYTHON_SHA256 7220835d9f90b37c006e9842a8dff4580aaca4318674f947302b8d28f3f81112
 
 RUN set -eux; \
 	\
@@ -56,10 +56,24 @@ RUN set -eux; \
 	nproc="$(nproc)"; \
 	EXTRA_CFLAGS="$(dpkg-buildflags --get CFLAGS)"; \
 	LDFLAGS="$(dpkg-buildflags --get LDFLAGS)"; \
+		arch="$(dpkg --print-architecture)"; arch="${arch##*-}"; \
 # https://docs.python.org/3.12/howto/perf_profiling.html
-# But don't enable frame-pointers on 32bit x86 due to performance drop.
 # https://github.com/docker-library/python/pull/1000#issuecomment-2597021615
-	test "$gnuArch" != 'i686-linux-gnu' && EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer"; \
+		case "$arch" in \
+			amd64|arm64) \
+				# only add "-mno-omit-leaf" on arches that support it
+				# https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/x86-Options.html#index-momit-leaf-frame-pointer-2
+				# https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/AArch64-Options.html#index-momit-leaf-frame-pointer
+				EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer"; \
+				;; \
+			i386) \
+				# don't enable frame-pointers on 32bit x86 due to performance drop.
+				;; \
+			*) \
+				# other arches don't support "-mno-omit-leaf"
+				EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer"; \
+				;; \
+		esac; \
 	make -j "$nproc" \
 		"EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" \
 		"LDFLAGS=${LDFLAGS:-}" \
