@@ -200,15 +200,14 @@ for version in "${versions[@]}"; do
 					empty
 				| ., "slim-" + .), # https://github.com/docker-library/ruby/pull/142#issuecomment-320012893
 				(
+					"3.22",
 					"3.21",
-					"3.20",
 					empty
 				| "alpine" + .),
 				if env.hasWindows != "" then
 					(
 						"ltsc2025",
 						"ltsc2022",
-						"1809",
 						empty
 					| "windows/windowsservercore-" + .)
 				else empty end
