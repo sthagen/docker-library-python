@@ -11,8 +11,8 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 # https://github.com/docker-library/python/pull/557
 ENV PYTHONIOENCODING UTF-8
 
-ENV PYTHON_VERSION 3.13.11
-ENV PYTHON_SHA256 30d4654b3eac7ddfdf2682db4c8dcb490f3055f4f33c6906d6b828f680152101
+ENV PYTHON_VERSION 3.13.12
+ENV PYTHON_SHA256 96159fcb523ae404b707186a75b4104ee23851e476a5e838e14584cf1e03f981
 
 RUN $url = ('https://www.python.org/ftp/python/{0}/python-{1}-amd64.exe' -f ($env:PYTHON_VERSION -replace '[a-z]+[0-9]*$', ''), $env:PYTHON_VERSION); \
 	Write-Host ('Downloading {0} ...' -f $url); \
