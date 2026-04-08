@@ -56,10 +56,10 @@
   "3.13": {
     "checksums": {
       "source": {
-        "sha256": "2a84cd31dd8d8ea8aaff75de66fc1b4b0127dd5799aa50a64ae9a313885b4593"
+        "sha256": "2ab91ff401783ccca64f75d10c882e957bdfd60e2bf5a72f8421793729b78a71"
       },
       "windows": {
-        "sha256": "96159fcb523ae404b707186a75b4104ee23851e476a5e838e14584cf1e03f981"
+        "sha256": "3c9c81d80f91c002ced86d645422d81432c68c7d9b6b0e974768ca2e449a4d00"
       }
     },
     "variants": [
@@ -72,15 +72,15 @@
       "windows/windowsservercore-ltsc2025",
       "windows/windowsservercore-ltsc2022"
     ],
-    "version": "3.13.12"
+    "version": "3.13.13"
   },
   "3.14": {
     "checksums": {
       "source": {
-        "sha256": "a97d5549e9ad81fe17159ed02c68774ad5d266c72f8d9a0b5a9c371fe85d902b"
+        "sha256": "d923c51303e38e249136fc1bdf3568d56ecb03214efdef48516176d3d7faaef8"
       },
       "windows": {
-        "sha256": "b68ad91421afbbd1a628105199c8c5f6179b21ba799067a8d8c0bbac3b7defb0"
+        "sha256": "b571567bd11ea98fd7a2cf85791d2c8557a63b1e04e9d1dae665a275cac87f1b"
       }
     },
     "variants": [
@@ -93,15 +93,15 @@
       "windows/windowsservercore-ltsc2025",
       "windows/windowsservercore-ltsc2022"
     ],
-    "version": "3.14.3"
+    "version": "3.14.4"
   },
   "3.15-rc": {
     "checksums": {
       "source": {
-        "sha256": "8f590c428b7f0d406df928b85737e7a3afa28eddd4d1419410ea809687ed1ea7"
+        "sha256": "28f1b6358609042ebcc81488ec24569519f50804bb07dc23cc707b281b031c69"
       },
       "windows": {
-        "sha256": "d756f2fade118cf01bb7a0bc2bf0feb36fffee99ae92bb92b75a455d70fecb3c"
+        "sha256": "ff7c6f5012cee08ed9a63fdfae4a3e22e927a32112de723b3777710a52391ea5"
       }
     },
     "variants": [
@@ -114,6 +114,6 @@
       "windows/windowsservercore-ltsc2025",
       "windows/windowsservercore-ltsc2022"
     ],
-    "version": "3.15.0a7"
+    "version": "3.15.0a8"
   }
 }
