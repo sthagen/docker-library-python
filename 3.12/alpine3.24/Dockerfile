@@ -4,10 +4,15 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM alpine:3.22
+FROM alpine:3.24
 
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
+
+# cannot remove LANG even though https://bugs.python.org/issue19846 is fixed
+# last attempted removal of LANG broke many users:
+# https://github.com/docker-library/python/pull/570
+ENV LANG C.UTF-8
 
 # runtime dependencies
 RUN set -eux; \
@@ -16,8 +21,9 @@ RUN set -eux; \
 		tzdata \
 	;
 
-ENV PYTHON_VERSION 3.14.5
-ENV PYTHON_SHA256 7e32597b99e5d9a39abed35de4693fa169df3e5850d4c334337ffd6a19a36db6
+ENV GPG_KEY 7169605F62C751356D054A26A821E680E5FA6305
+ENV PYTHON_VERSION 3.12.13
+ENV PYTHON_SHA256 c08bc65a81971c1dd5783182826503369466c7e67374d1646519adf05207b684
 
 RUN set -eux; \
 	\
@@ -48,11 +54,16 @@ RUN set -eux; \
 		xz \
 		xz-dev \
 		zlib-dev \
-		zstd-dev \
 	; \
 	\
 	wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz"; \
 	echo "$PYTHON_SHA256 *python.tar.xz" | sha256sum -c -; \
+	wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc"; \
+	GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
+	gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$GPG_KEY"; \
+	gpg --batch --verify python.tar.xz.asc python.tar.xz; \
+	gpgconf --kill all; \
+	rm -rf "$GNUPGHOME" python.tar.xz.asc; \
 	mkdir -p /usr/src/python; \
 	tar --extract --directory /usr/src/python --strip-components=1 --file python.tar.xz; \
 	rm python.tar.xz; \

@@ -4,7 +4,7 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-FROM alpine:3.22
+FROM alpine:3.24
 
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
@@ -16,8 +16,8 @@ RUN set -eux; \
 		tzdata \
 	;
 
-ENV PYTHON_VERSION 3.15.0b2
-ENV PYTHON_SHA256 d14f474ab679e90bc734b02ff58447b6ec99a821af61d6ff0c1da0f86e341a71
+ENV PYTHON_VERSION 3.14.6
+ENV PYTHON_SHA256 143b1dddefaec3bd2e21e3b839b34a2b7fb9842272883c576420d605e9f30c63
 
 RUN set -eux; \
 	\
